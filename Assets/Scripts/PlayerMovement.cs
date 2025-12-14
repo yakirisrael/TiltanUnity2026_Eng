@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public float moveSpeed = 1f;
+
+    float sum = 0;
+   
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -12,15 +16,27 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizonatlValue =  Input.GetAxis("Horizontal");
-        Debug.Log(horizonatlValue);
+      //  sum += Time.deltaTime;
 
-        int sign = 0;
-        if (horizonatlValue > 0)
-            sign = 1;
-        if (horizonatlValue < 0)
-            sign = -1;
-         transform.position += new Vector3(sign * 0.01f, 0, 0);
+        
+        float horizonatlValue =  Input.GetAxisRaw("Horizontal");
+        float verticalValue =  Input.GetAxisRaw("Vertical");
+        
+        Debug.Log(Input.GetAxisRaw("RotatePlayer"));
+
+       // transform.position += Vector3.up * moveSpeed * Time.deltaTime;
+
+       if (Input.GetAxisRaw("RotatePlayer") == 1)
+       {
+           transform.rotation = Quaternion.Euler(new Vector3(
+               0,
+               0,
+               moveSpeed * Time.realtimeSinceStartup));
+       }
+       /*   transform.position += new Vector3(
+              horizonatlValue * moveSpeed * Time.deltaTime, // X
+              verticalValue * moveSpeed * Time.deltaTime, //Y
+              0); // Z */
 
     }
 }
