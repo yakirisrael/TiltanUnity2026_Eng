@@ -24,15 +24,16 @@ public class PlayerMovement : MonoBehaviour
         
         Debug.Log(Input.GetAxisRaw("RotatePlayer"));
 
-       // transform.position += Vector3.up * moveSpeed * Time.deltaTime;
+        transform.position += Vector3.right * horizonatlValue * moveSpeed * Time.deltaTime;
+        transform.position += Vector3.up * verticalValue * moveSpeed * Time.deltaTime;
 
-       if (Input.GetAxisRaw("RotatePlayer") == 1)
+      /* if (Input.GetAxisRaw("RotatePlayer") == 1)
        {
            transform.rotation = Quaternion.Euler(new Vector3(
                0,
                0,
                moveSpeed * Time.realtimeSinceStartup));
-       }
+       }*/
        /*   transform.position += new Vector3(
               horizonatlValue * moveSpeed * Time.deltaTime, // X
               verticalValue * moveSpeed * Time.deltaTime, //Y
