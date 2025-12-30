@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using UnityEngine;
 using Vector2 = System.Numerics.Vector2;
@@ -11,7 +12,17 @@ public class EnemyMovement : MonoBehaviour
     public float deadZone = 0.4f;
 
     private Vector3 originalScale;
+
+    private float timeFromLastPunch = 0;
+    public float delayBetweenAttacks = 1.5f;
+    
+    Animator animator;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     void Start()
     {
         originalScale = transform.localScale;
@@ -26,19 +37,61 @@ public class EnemyMovement : MonoBehaviour
         Vector3 direction = difference.normalized;
 
         float distance = difference.magnitude;
-        Debug.Log(direction);
-        
-        if (distance > deadZone)
-            transform.position += direction * delta * Time.deltaTime;
+        //Debug.Log(direction);
 
-           float x = direction.x > 0 ? originalScale.x * -1.0f : originalScale.x;
+        if (distance > deadZone) // enemy chase the player
+        {
+            transform.position += direction * delta * Time.deltaTime;
+            animator.SetBool("Walking", true);
+        }
+        else // near the player
+        {
+            animator.SetBool("Walking", false);
+
+            if (IsAnimationFinished("Punching"))
+            {
+                if (timeFromLastPunch < delayBetweenAttacks)
+                {
+                    timeFromLastPunch += Time.deltaTime;
+                }
+                else // had enough pause between the attacks
+                {
+                    animator.SetTrigger("Punching");
+                    timeFromLastPunch = 0;
+                }
+
+                Debug.Log(timeFromLastPunch);
+            }
+            else
+            {
+                animator.SetTrigger("Hurt");
+            }
+        }
+
+        float x = direction.x > 0 ? originalScale.x * -1.0f : originalScale.x;
            
             transform.localScale = new Vector3(
                 x, // x - depending on direction
                 originalScale.y, // y
                 originalScale.z); //z
-        
+    }
 
+    bool IsAnimationFinished(string animationName)
+    {
+       AnimatorStateInfo info =  animator.GetCurrentAnimatorStateInfo(0);
 
+       if (info.IsName(animationName))
+       {
+           if (info.normalizedTime >= 0.95f)
+           {
+               return true;
+           }
+           else
+           {
+               return false;
+           }
+       }
+       
+       return true;
     }
 }
