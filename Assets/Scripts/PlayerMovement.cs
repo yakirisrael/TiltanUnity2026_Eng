@@ -4,12 +4,16 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 1f;
-
+    public int HP = 100;
+    public int MaxHP = 500;
+    public GameObject HUD;
+    
     float sum = 0;
 
     Animator animator;
     
     private Vector3 originalScale;
+
    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -63,5 +67,13 @@ public class PlayerMovement : MonoBehaviour
               verticalValue * moveSpeed * Time.deltaTime, //Y
               0); // Z */
 
+    }
+    
+    public void DealDamage(int damage)
+    {
+        HP -= damage;
+        HP = Mathf.Clamp(HP, 0, MaxHP);
+    
+        HUD.GetComponent<HUD>().UpdateHealth(HP);
     }
 }

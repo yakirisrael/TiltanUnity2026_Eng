@@ -10,6 +10,7 @@ public class EnemyMovement : MonoBehaviour
 
     public float delta = 1.0f;
     public float deadZone = 0.4f;
+    public int damage = 10;
 
     private Vector3 originalScale;
 
@@ -58,6 +59,8 @@ public class EnemyMovement : MonoBehaviour
                 {
                     animator.SetTrigger("Punching");
                     timeFromLastPunch = 0;
+                    
+                    player.GetComponent<PlayerMovement>().DealDamage(damage);
                 }
 
                 Debug.Log(timeFromLastPunch);

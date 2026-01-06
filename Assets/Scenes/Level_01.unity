@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 20711100}
   - component: {fileID: 20711099}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PlayerHealth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -974,6 +974,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ba02495ba1ab043b6458a4171cb682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerHealthTxt: {fileID: 20711099}
 --- !u!1 &1648715043
 GameObject:
   m_ObjectHideFlags: 0
@@ -1078,6 +1079,7 @@ MonoBehaviour:
   player: {fileID: 1821711786}
   delta: 0.5
   deadZone: 0.4
+  damage: 10
   delayBetweenAttacks: 1.3
 --- !u!95 &1648715047
 Animator:
@@ -1282,6 +1284,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 1
+  HP: 100
+  MaxHP: 500
+  HUD: {fileID: 1414857250}
 --- !u!95 &1821711790
 Animator:
   serializedVersion: 7
