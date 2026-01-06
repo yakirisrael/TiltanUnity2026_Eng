@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     public int HP = 100;
     public int MaxHP = 500;
     public GameObject HUD;
+    public GameObject PauseMenu;
     
     float sum = 0;
 
@@ -26,13 +27,33 @@ public class PlayerMovement : MonoBehaviour
         originalScale = transform.localScale;
     }
 
+    public void TogglePauseMenu(bool pause)
+    {
+        if (pause)
+        {
+            HUD.SetActive(false);
+            PauseMenu.SetActive(true);
+            
+            Time.timeScale = 0;
+        }
+        else
+        {
+            HUD.SetActive(true);
+            PauseMenu.SetActive(false);
+
+            Time.timeScale = 1;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
       //  sum += Time.deltaTime;
+      if (Input.GetButtonDown("PauseMenu"))
+      {
+          TogglePauseMenu(true);
+      }
 
-        
-        float horizonatlValue =  Input.GetAxisRaw("Horizontal");
+      float horizonatlValue =  Input.GetAxisRaw("Horizontal");
         float verticalValue =  Input.GetAxisRaw("Vertical");
         
        // Debug.Log(Input.GetAxisRaw("RotatePlayer"));
