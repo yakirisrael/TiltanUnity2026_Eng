@@ -1,13 +1,15 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
     public TextMeshProUGUI PlayerHealthTxt;
+
+    public Slider HealthBar;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        UpdateHealth(100);
     }
 
     // Update is called once per frame
@@ -15,8 +17,11 @@ public class HUD : MonoBehaviour
     {
     }
 
-    public void UpdateHealth(int HP)
+    public void UpdateHealth(int HP, int MaxHP)
     {
         PlayerHealthTxt.text = "Health: " + HP;
+        
+        float percentage = HP / (float)MaxHP;
+        HealthBar.value = percentage;
     }
 }

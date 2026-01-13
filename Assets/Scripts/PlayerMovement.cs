@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     
     private Vector3 originalScale;
     
-    UI_Manager UIManager;
+    public UI_Manager UIManager;
 
    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         originalScale = transform.localScale;
+        
+        UIManager.GetComponent<UI_Manager>().UpdateHealth(HP, MaxHP);
     }
 
     
@@ -77,6 +79,6 @@ public class PlayerMovement : MonoBehaviour
         HP -= damage;
         HP = Mathf.Clamp(HP, 0, MaxHP);
     
-        UIManager.GetComponent<UI_Manager>().UpdateHealth(HP);
+        UIManager.GetComponent<UI_Manager>().UpdateHealth(HP, MaxHP);
     }
 }

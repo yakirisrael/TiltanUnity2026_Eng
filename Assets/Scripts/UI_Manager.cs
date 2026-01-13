@@ -39,9 +39,9 @@ public class UI_Manager : MonoBehaviour
         }
     }
 
-    public void UpdateHealth(int HP)
+    public void UpdateHealth(int HP, int MaxHP)
     {
-        HUD.GetComponent<HUD>().UpdateHealth(HP);
+        HUD.GetComponent<HUD>().UpdateHealth(HP, MaxHP);
     }
     
     public void QuitGame()
