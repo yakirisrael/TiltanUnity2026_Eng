@@ -9,7 +9,7 @@ public class UI_Manager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        UpdateSouls();
     }
 
     private void Update()
@@ -43,7 +43,12 @@ public class UI_Manager : MonoBehaviour
     {
         HUD.GetComponent<HUD>().UpdateHealth(HP, MaxHP);
     }
-    
+
+    public void UpdateSouls()
+    {
+        HUD.GetComponent<HUD>().UpdateSoulsWidth();
+    }
+
     public void QuitGame()
     {
         EditorApplication.isPlaying = false;
