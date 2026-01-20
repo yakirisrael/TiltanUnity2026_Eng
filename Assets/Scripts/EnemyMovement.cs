@@ -57,13 +57,13 @@ public class EnemyMovement : MonoBehaviour
                 }
                 else // had enough pause between the attacks
                 {
-                    animator.SetTrigger("Punching");
+                    //animator.SetTrigger("Punching");
                     timeFromLastPunch = 0;
                     
-                    player.GetComponent<PlayerMovement>().DealDamage(damage);
+                   // player.GetComponent<PlayerMovement>().DealDamage(damage);
                 }
 
-                Debug.Log(timeFromLastPunch);
+                //Debug.Log(timeFromLastPunch);
             }
             else
             {
@@ -96,5 +96,30 @@ public class EnemyMovement : MonoBehaviour
        }
        
        return true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("PlayerZone"))
+        {
+            PlayerMovement player = other.GetComponentInParent<PlayerMovement>();
+            if (player != null)
+            {
+                animator.SetTrigger("Punching");
+                player.DealDamage(damage);
+            }
+
+            Debug.Log("Collided with " + other.name);
+        }
+
+       
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("PlayerZone"))
+        {
+            Debug.Log("Exit collision with " + other.name);
+        }
     }
 }

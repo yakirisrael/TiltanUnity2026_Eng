@@ -6,7 +6,9 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 1f;
     public int HP = 100;
     public int MaxHP = 500;
-    
+
+    public Collider2D NavArea;
+    public GameObject Feet;
     
     float sum = 0;
 
@@ -42,8 +44,12 @@ public class PlayerMovement : MonoBehaviour
         
        // Debug.Log(Input.GetAxisRaw("RotatePlayer"));
 
-        transform.position += Vector3.right * horizonatlValue * moveSpeed * Time.deltaTime;
-        transform.position += Vector3.up * verticalValue * moveSpeed * Time.deltaTime;
+       Vector3 deltaX =  Vector3.right * horizonatlValue * moveSpeed * Time.deltaTime;
+       Vector3 deltaY =  Vector3.up * verticalValue * moveSpeed * Time.deltaTime;
+       Vector3 target = Feet.transform.position + deltaX + deltaY;
+       Vector3 NewPosition = transform.position + deltaX + deltaY;
+       if (NavArea.OverlapPoint(target))
+            transform.position = NewPosition;
 
         if (horizonatlValue != 0 || verticalValue != 0)
         {
@@ -81,4 +87,14 @@ public class PlayerMovement : MonoBehaviour
     
         UIManager.GetComponent<UI_Manager>().UpdateHealth(HP, MaxHP);
     }
+    
+ /*   private void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("Collided with " + other.name);
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        Debug.Log("Exit collision with " + other.name);
+    } */
 }
