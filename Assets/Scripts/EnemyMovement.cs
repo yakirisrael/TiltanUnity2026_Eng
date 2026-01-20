@@ -27,6 +27,8 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         originalScale = transform.localScale;
+        
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
