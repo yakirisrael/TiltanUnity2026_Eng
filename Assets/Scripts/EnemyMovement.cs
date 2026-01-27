@@ -1,8 +1,19 @@
 using System;
+using System.Collections;
 using System.Numerics;
 using UnityEngine;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = UnityEngine.Vector3;
+
+enum EnemyState
+{
+    Unware,
+    ChasePlayer,
+    Attack,
+    WaitForAttack,
+    ReturnToPosition,
+    Die
+}
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -16,6 +27,8 @@ public class EnemyMovement : MonoBehaviour
 
     private float timeFromLastPunch = 0;
     public float delayBetweenAttacks = 1.5f;
+
+    private EnemyState state;
     
     Animator animator;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -27,6 +40,8 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         originalScale = transform.localScale;
+
+        state = EnemyState.Unware;
         
         player = GameObject.FindGameObjectWithTag("Player");
     }
@@ -40,12 +55,14 @@ public class EnemyMovement : MonoBehaviour
         Vector3 direction = difference.normalized;
 
         float distance = difference.magnitude;
-        //Debug.Log(direction);
+        Debug.Log(distance);
 
         if (distance > deadZone) // enemy chase the player
         {
             transform.position += direction * delta * Time.deltaTime;
             animator.SetBool("Walking", true);
+            
+            state = EnemyState.ChasePlayer;
         }
         else // near the player
         {
@@ -53,19 +70,7 @@ public class EnemyMovement : MonoBehaviour
 
             if (IsAnimationFinished("Punching"))
             {
-                if (timeFromLastPunch < delayBetweenAttacks)
-                {
-                    timeFromLastPunch += Time.deltaTime;
-                }
-                else // had enough pause between the attacks
-                {
-                    //animator.SetTrigger("Punching");
-                    timeFromLastPunch = 0;
-                    
-                   // player.GetComponent<PlayerMovement>().DealDamage(damage);
-                }
-
-                //Debug.Log(timeFromLastPunch);
+               
             }
             else
             {
@@ -105,16 +110,38 @@ public class EnemyMovement : MonoBehaviour
         if (other.CompareTag("PlayerZone"))
         {
             PlayerMovement player = other.GetComponentInParent<PlayerMovement>();
-            if (player != null)
+            if (player != null && state == EnemyState.ChasePlayer)
             {
-                animator.SetTrigger("Punching");
-                player.DealDamage(damage);
+                StartCoroutine(WaitThenAttack(player, 2));
             }
 
             Debug.Log("Collided with " + other.name);
         }
 
        
+    }
+
+    IEnumerator WaitThenAttack(PlayerMovement player, float waitTime)
+    {
+        while (true)
+        {
+            state = EnemyState.WaitForAttack;
+            yield return new WaitForSeconds(waitTime);
+
+            state = EnemyState.Attack;
+            Attack(player);
+            
+            while (!IsAnimationFinished("Punching"))
+                yield return null;
+        }
+        
+    }
+
+    void Attack(PlayerMovement player)
+    {
+        // near the player
+        animator.SetTrigger("Punching");
+        player.DealDamage(damage);
     }
 
     private void OnTriggerExit2D(Collider2D other)
