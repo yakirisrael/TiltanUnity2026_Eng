@@ -1,5 +1,14 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
+
+enum PlayerState
+{
+    Idle,
+    Walking,
+    Attacking,
+    Jumping
+}
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -18,17 +27,23 @@ public class PlayerMovement : MonoBehaviour
     
     public UI_Manager UIManager;
 
-   
+    Rigidbody2D rb;
+    
+    public float jumpForce = 1f;
+
+    private PlayerState state;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Start()
     {
         originalScale = transform.localScale;
         
+        state =  PlayerState.Idle;
         UIManager.GetComponent<UI_Manager>().UpdateHealth(HP, MaxHP);
     }
 
@@ -39,20 +54,22 @@ public class PlayerMovement : MonoBehaviour
       //  sum += Time.deltaTime;
      
 
-      float horizonatlValue =  Input.GetAxisRaw("Horizontal");
+        float horizonatlValue =  Input.GetAxisRaw("Horizontal");
         float verticalValue =  Input.GetAxisRaw("Vertical");
-        
+
+        Jump();
        // Debug.Log(Input.GetAxisRaw("RotatePlayer"));
 
        Vector3 deltaX =  Vector3.right * horizonatlValue * moveSpeed * Time.deltaTime;
        Vector3 deltaY =  Vector3.up * verticalValue * moveSpeed * Time.deltaTime;
-       Vector3 target = Feet.transform.position + deltaX + deltaY;
-       Vector3 NewPosition = transform.position + deltaX + deltaY;
-       if (NavArea.OverlapPoint(target))
-            transform.position = NewPosition;
+      
+       StayInNavArea(deltaX, deltaY);
 
-        if (horizonatlValue != 0 || verticalValue != 0)
-        {
+       if (horizonatlValue != 0 || verticalValue != 0)
+       {
+           if (state != PlayerState.Jumping)
+                state = PlayerState.Walking;
+           
             animator.SetBool("Walking", true);
             
             float x =  horizonatlValue < 0 ? originalScale.x * -1.0f : originalScale.x;
@@ -64,6 +81,9 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            if (state != PlayerState.Jumping)
+                state =  PlayerState.Idle;
+            
             animator.SetBool("Walking", false);
         }
         /* if (Input.GetAxisRaw("RotatePlayer") == 1)
@@ -77,9 +97,23 @@ public class PlayerMovement : MonoBehaviour
               horizonatlValue * moveSpeed * Time.deltaTime, // X
               verticalValue * moveSpeed * Time.deltaTime, //Y
               0); // Z */
+       
+       
+       if (state == PlayerState.Jumping && rb.linearVelocity.y == 0)
+           state =  PlayerState.Idle;
+       
+            Debug.Log(rb.linearVelocity.y);
 
     }
-    
+
+    private void StayInNavArea(Vector3 deltaX, Vector3 deltaY)
+    {
+        Vector3 target = Feet.transform.position + deltaX + deltaY;
+        Vector3 NewPosition = transform.position + deltaX + deltaY;
+        if (NavArea.OverlapPoint(target))
+            transform.position = NewPosition;
+    }
+
     public void DealDamage(int damage)
     {
         HP -= damage;
@@ -88,7 +122,7 @@ public class PlayerMovement : MonoBehaviour
         UIManager.GetComponent<UI_Manager>().UpdateHealth(HP, MaxHP);
     }
     
- /*   private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("Collided with " + other.name);
     }
@@ -96,5 +130,15 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         Debug.Log("Exit collision with " + other.name);
-    } */
+    } 
+    
+
+     void Jump()
+     {
+         if (Input.GetButtonDown("Jump") &&  state != PlayerState.Jumping)
+         {
+             state = PlayerState.Jumping;
+             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+         }
+     }
 }

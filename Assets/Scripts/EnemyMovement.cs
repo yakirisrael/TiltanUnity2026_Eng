@@ -55,7 +55,7 @@ public class EnemyMovement : MonoBehaviour
         Vector3 direction = difference.normalized;
 
         float distance = difference.magnitude;
-        Debug.Log(distance);
+        //Debug.Log(distance);
 
         if (distance > deadZone) // enemy chase the player
         {
@@ -115,7 +115,7 @@ public class EnemyMovement : MonoBehaviour
                 StartCoroutine(WaitThenAttack(player, 2));
             }
 
-            Debug.Log("Collided with " + other.name);
+          //  Debug.Log("Collided with " + other.name);
         }
 
        
@@ -148,7 +148,7 @@ public class EnemyMovement : MonoBehaviour
     {
         if (other.CompareTag("PlayerZone"))
         {
-            Debug.Log("Exit collision with " + other.name);
+            //Debug.Log("Exit collision with " + other.name);
         }
     }
 }

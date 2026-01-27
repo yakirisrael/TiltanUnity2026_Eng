@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject EnemyPrefab;
+    public GameObject[] EnemyPrefab;
 
     public int numEnemies = 5;
     public int numBursts = 2;
@@ -31,7 +31,8 @@ public class EnemySpawner : MonoBehaviour
     {
         for (int i = 0; i < numEnemies; i++)
         {
-            GameObject enemy = Instantiate(EnemyPrefab, new Vector3(i * spaceBetweenEnemies, 0, 0), Quaternion.identity);
+            int index = Random.Range(0, EnemyPrefab.Length);
+            GameObject enemy = Instantiate(EnemyPrefab[index], new Vector3(i * spaceBetweenEnemies, 0, 0), Quaternion.identity);
             yield return new WaitForSeconds(delayBetweenEnemies);
         }
     }
