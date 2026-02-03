@@ -32,6 +32,19 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 1f;
 
     private PlayerState state;
+
+    
+    [SerializeField]
+    private float jumpDistance = 0.1f;
+    
+    private bool isJumping = false;
+    
+    [SerializeField]
+    private Transform FeetTransform;
+    
+    [SerializeField]
+    private LayerMask GroundMask;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -54,9 +67,21 @@ public class PlayerMovement : MonoBehaviour
       //  sum += Time.deltaTime;
      
 
+          if (hurt)
+          {
+             
+              HP = (int)Mathf.Lerp(HP, target, Time.deltaTime * 0.001f);
+              UIManager.GetComponent<UI_Manager>().UpdateHealth(HP, MaxHP);
+              
+              if (Mathf.Approximately(HP, target))
+                  hurt = false;
+          }
+      
         float horizonatlValue =  Input.GetAxisRaw("Horizontal");
         float verticalValue =  Input.GetAxisRaw("Vertical");
 
+        isJumping = IsJumping();
+        
         Jump();
        // Debug.Log(Input.GetAxisRaw("RotatePlayer"));
 
@@ -102,7 +127,7 @@ public class PlayerMovement : MonoBehaviour
        if (state == PlayerState.Jumping && rb.linearVelocity.y == 0)
            state =  PlayerState.Idle;
        
-            Debug.Log(rb.linearVelocity.y);
+            //Debug.Log(rb.linearVelocity.y);
 
     }
 
@@ -124,19 +149,38 @@ public class PlayerMovement : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Collided with " + other.name);
+       // Debug.Log("Collided with " + other.name);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log("Exit collision with " + other.name);
-    } 
-    
+      //  Debug.Log("Exit collision with " + other.name);
+    }
 
-     void Jump()
+
+    bool IsJumping()
+    {
+        Debug.DrawRay(FeetTransform.position, Vector3.down * jumpDistance, Color.red);
+        RaycastHit2D hit = Physics2D.Raycast(FeetTransform.position, Vector2.down, jumpDistance, GroundMask);
+        if (hit.collider != null)
+        {
+           
+            return false;
+        }
+        Debug.Log("in the air");
+        return true;
+    }
+
+    bool hurt = false;
+    private float target;
+    void Jump()
      {
          if (Input.GetButtonDown("Jump") &&  state != PlayerState.Jumping)
          {
+             hurt = true;
+             target = HP - 5;
+             
+
              state = PlayerState.Jumping;
              rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
          }

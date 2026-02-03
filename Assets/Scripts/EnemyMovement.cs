@@ -31,10 +31,13 @@ public class EnemyMovement : MonoBehaviour
     private EnemyState state;
     
     Animator animator;
+
+    private Sight sight;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        sight = GetComponent<Sight>();
     }
 
     void Start()
@@ -57,14 +60,14 @@ public class EnemyMovement : MonoBehaviour
         float distance = difference.magnitude;
         //Debug.Log(distance);
 
-        if (distance > deadZone) // enemy chase the player
+        if (sight.IsSee() && distance > deadZone) // enemy chase the player
         {
             transform.position += direction * delta * Time.deltaTime;
             animator.SetBool("Walking", true);
             
             state = EnemyState.ChasePlayer;
         }
-        else // near the player
+        else   // near the player
         {
             animator.SetBool("Walking", false);
 
