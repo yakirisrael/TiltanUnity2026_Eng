@@ -75,4 +75,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.25
+    functionName: PlayAttackSFX
+    data: 
+    objectReferenceParameter: {fileID: 8300000, guid: 7863f3f55a0decb4fa8e0306a71a39c9, type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

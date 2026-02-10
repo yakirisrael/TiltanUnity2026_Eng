@@ -32,6 +32,9 @@ public class UI_Manager : MonoBehaviour
         }
         else
         {
+            if (LevelManager.Instance.levelClips.Count > 0)
+                AudioManager.Instance.PlayMusic(LevelManager.Instance.levelClips[0]);
+            
             HUD.SetActive(true);
             PauseMenu.SetActive(false);
 

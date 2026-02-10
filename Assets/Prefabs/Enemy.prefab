@@ -233,6 +233,7 @@ MonoBehaviour:
   deadZone: 0.3
   damage: 20
   delayBetweenAttacks: 1.3
+  attackClip: {fileID: 8300000, guid: 7863f3f55a0decb4fa8e0306a71a39c9, type: 3}
 --- !u!95 &6742572110401085147
 Animator:
   serializedVersion: 7

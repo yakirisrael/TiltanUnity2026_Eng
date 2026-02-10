@@ -21,7 +21,11 @@ public class EnemyMovement : MonoBehaviour
 
     public float delta = 1.0f;
     public float deadZone = 0.4f;
-    public int damage = 10;
+    
+    [Min(0)]
+    [Tooltip("This is the damage the enemy can make")]
+    [SerializeField]
+    private int damage = 10;
 
     private Vector3 originalScale;
 
@@ -30,14 +34,28 @@ public class EnemyMovement : MonoBehaviour
 
     private EnemyState state;
     
-    Animator animator;
+    Animator animator = null;
 
     private Sight sight;
+    
+    [Space(50)]
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip attackClip;
+    [SerializeField] private AudioClip hitClip;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+      //  animator = GetComponent<Animator>();
         sight = GetComponent<Sight>();
+    }
+
+    private void OnValidate()
+    {
+        if (animator == null) 
+        {
+            animator = GetComponent<Animator>();
+        }
     }
 
     void Start()
@@ -153,5 +171,10 @@ public class EnemyMovement : MonoBehaviour
         {
             //Debug.Log("Exit collision with " + other.name);
         }
+    }
+
+    public void PlayAttackSFX(AudioClip clip)
+    {
+        AudioManager.Instance.PlaySFX(clip);
     }
 }
