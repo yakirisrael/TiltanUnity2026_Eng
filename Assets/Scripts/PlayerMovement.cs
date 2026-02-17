@@ -10,6 +10,8 @@ enum PlayerState
     Jumping
 }
 
+
+[Serializable]
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 1f;

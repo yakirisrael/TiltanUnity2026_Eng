@@ -54,7 +54,11 @@ public class UI_Manager : MonoBehaviour
 
     public void QuitGame()
     {
+        #if UNITY_EDITOR
         EditorApplication.isPlaying = false;
+        #else
+        Application.Quit();
+        #endif
        // Application.Quit();
     }
 }

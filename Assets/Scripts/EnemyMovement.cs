@@ -48,6 +48,7 @@ public class EnemyMovement : MonoBehaviour
     {
       //  animator = GetComponent<Animator>();
         sight = GetComponent<Sight>();
+        animator = GetComponent<Animator>();
     }
 
     private void OnValidate()

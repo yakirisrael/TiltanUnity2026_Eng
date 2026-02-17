@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    public PlayerMovement playerMovement;
+    
     public static LevelManager Instance;
     
     public List<AudioClip> levelClips;
@@ -19,6 +21,8 @@ public class LevelManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
+        PersistencyManager.Instance.SavePlayerData(playerMovement);
     }
 
     // Update is called once per frame
